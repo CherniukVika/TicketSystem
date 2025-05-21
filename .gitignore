@@ -1,0 +1,10 @@
+bin/
+obj/
+*.csproj.user
+.vs/
+*.suo
+*.user
+Migrations/
+*.mdf
+*.ldf
+packages/
