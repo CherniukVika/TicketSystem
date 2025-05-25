@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using TicketSystem.BLL.Dto;
+﻿using TicketSystem.BLL.Dto;
 using TicketSystem.BLL.Strategy;
 
 namespace TicketSystem.BLL.Services
