@@ -11,7 +11,7 @@ namespace TicketSystem.BLL.Services
         Task<List<SeatDto>> GetAvailableSeatsAsync(int performanceId, int scheduleId, string location);
         Task<int> GetAvailableSeatsCountAsync(int performanceId, int scheduleId, string location);
         Task<TicketDto?> BuyTicketAsync(int performanceId, int scheduleId, int seatId, ITicketPricingStrategy pricingStrategy, string phoneNumber);
-        Task<(bool Success, TicketDto? Ticket)> ReturnTicketAsync(int ticketId, string phoneNumber); // Оновлена сигнатура
+        Task<(bool Success, TicketDto? Ticket)> ReturnTicketAsync(int ticketId, string phoneNumber);
         Task<List<TicketDto>> GetTicketsByStatusAsync(TicketSystem.BLL.Dto.TicketStatus status);
     }
 }
