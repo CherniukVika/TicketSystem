@@ -240,11 +240,11 @@ namespace TicketSystem.BLL.Tests
             _mapperMock.Setup(m => m.Map<TicketDto>(It.IsAny<Ticket>())).Returns(ticketDto);
 
             var result = await _theaterService.BuyTicketAsync(performanceId, scheduleId, seatId, pricingStrategy.Object, phoneNumber);
-
-            Assert.That(result, Is.Not.Null, "Result should not be null");
-            Assert.That(result.Status, Is.EqualTo(TicketSystem.BLL.Dto.TicketStatus.Sold), "Ticket status should be Sold");
-            Assert.That(result.Price, Is.EqualTo(300m), "Ticket price should be 300");
-            Assert.That(result.PhoneNumber, Is.EqualTo(phoneNumber), "Phone number should match");
+          
+            Assert.That(result, Is.Not.Null, "Результат не повинен бути null");
+            Assert.That(result.Status, Is.EqualTo(TicketSystem.BLL.Dto.TicketStatus.Sold), "Статус квитка має бути 'Продано'");
+            Assert.That(result.Price, Is.EqualTo(300m), "Ціна квитка має дорівнювати 300");
+            Assert.That(result.PhoneNumber, Is.EqualTo(phoneNumber), "Номер телефону має співпадати");
         }
 
 

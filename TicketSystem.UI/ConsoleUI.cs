@@ -329,7 +329,7 @@ namespace TicketSystem.UI
 
                     if (!tickets.Any())
                     {
-                        Console.WriteLine("У вас немає квитків на цю виставу.");
+                        Console.WriteLine("Номера телефону не знайдено в базі даних.");
                         Console.ReadKey();
                         return;
                     }
