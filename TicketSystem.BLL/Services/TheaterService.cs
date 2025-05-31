@@ -164,6 +164,17 @@ namespace TicketSystem.BLL.Services
             }
         }
 
+        public async Task<TicketDto?> GetTicketByIdAsync(int id)
+        {
+            var ticket = await _unitOfWork.Tickets.FirstOrDefaultAsync(
+                t => t.Id == id,
+                query => query.Include(t => t.Performance),
+                query => query.Include(t => t.PerformanceSchedule),
+                query => query.Include(t => t.Seat));
+
+            return ticket != null ? _mapper.Map<TicketDto>(ticket) : null;
+        }
+
         public async Task<List<TicketDto>> GetTicketsByStatusAsync(TicketSystem.BLL.Dto.TicketStatus status)
         {
             var dalStatus = status switch
@@ -181,6 +192,7 @@ namespace TicketSystem.BLL.Services
 
             return _mapper.Map<List<TicketDto>>(tickets);
         }
+
     }
 
     public static class PhoneNumberValidator
@@ -193,4 +205,5 @@ namespace TicketSystem.BLL.Services
             }
         }
     }
+
 }

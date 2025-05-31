@@ -83,7 +83,11 @@ namespace TicketSystem.DAL
 
             modelBuilder.Entity<Ticket>()
                 .Property(t => t.Status)
-                .HasConversion<string>();          
+                .HasConversion<string>();
+
+            modelBuilder.Entity<Ticket>()
+                .Property(t => t.Price)
+                .HasPrecision(18, 2);
         }
     }
 

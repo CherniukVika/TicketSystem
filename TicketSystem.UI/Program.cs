@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TicketSystem.BLL.Mapper;
 using TicketSystem.BLL.Services;
@@ -35,10 +36,13 @@ namespace TicketSystem.UI
             services.AddDbContext<TicketSystemContext>(options =>
                 options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=TicketSystem;Trusted_Connection=True;"));
 
-            services.AddAutoMapper(cfg =>
+            var mapperConfig = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<AutoMapperProfile>();
             });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ITheaterService, TheaterService>();

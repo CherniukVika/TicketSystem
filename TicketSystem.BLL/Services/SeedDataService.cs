@@ -29,25 +29,25 @@ namespace TicketSystem.BLL.Services
 
                     var schedule1 = new PerformanceSchedule
                     {
-                        Date = new DateTime(2025, 5, 30, 16, 0, 0),
+                        Date = new DateTime(2025, 6, 3, 16, 0, 0),
                         Seats = GenerateSeats()
                     };
 
                     var schedule1_1 = new PerformanceSchedule
                     {
-                        Date = new DateTime(2025, 6, 3, 18, 0, 0),
+                        Date = new DateTime(2025, 6, 5, 18, 0, 0),
                         Seats = GenerateSeats()
                     };
 
                     var schedule2 = new PerformanceSchedule
                     {
-                        Date = new DateTime(2025, 5, 31, 18, 0, 0),
+                        Date = new DateTime(2025, 6, 4, 18, 0, 0),
                         Seats = GenerateSeats()
                     };
 
                     var schedule2_2 = new PerformanceSchedule
                     {
-                        Date = new DateTime(2025, 6, 5, 18, 0, 0),
+                        Date = new DateTime(2025, 6, 8, 18, 0, 0),
                         Seats = GenerateSeats()
                     };
 
@@ -59,7 +59,7 @@ namespace TicketSystem.BLL.Services
 
                     var schedule3_3 = new PerformanceSchedule
                     {
-                        Date = new DateTime(2025, 6, 7, 16, 0, 0),
+                        Date = new DateTime(2025, 6, 6, 16, 0, 0),
                         Seats = GenerateSeats()
                     };
 
