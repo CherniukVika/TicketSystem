@@ -6,5 +6,6 @@
         public DateTime Date { get; set; }
         public int PerformanceId { get; set; }
         public List<SeatDto> Seats { get; set; }
+        public int AvailableSeats { get; set; }
     }
 }

@@ -22,14 +22,7 @@ namespace TicketSystem.PL.Controllers
         public async Task<IActionResult> GetAllPerformances()
         {
             var performances = await _theaterService.GetAllPerformancesAsync();
-            var performancePLDtos = performances.Select(p => new PerformancePLDto
-            {
-                Id = p.Id,
-                Title = p.Title,
-                AuthorName = p.Author.Name,
-                Genres = p.Genres.Select(g => g.Name).ToList(),
-                Schedules = _mapper.Map<List<PerformanceSchedulePLDto>>(p.Schedules)
-            }).ToList();
+            var performancePLDtos = _mapper.Map<List<PerformancePLDto>>(performances);
             return Ok(performancePLDtos);
         }
 
@@ -40,23 +33,16 @@ namespace TicketSystem.PL.Controllers
             if (performance == null)
                 return NotFound();
 
-            var performancePLDto = new PerformancePLDto
-            {
-                Id = performance.Id,
-                Title = performance.Title,
-                AuthorName = performance.Author.Name,
-                Genres = performance.Genres.Select(g => g.Name).ToList(),
-                Schedules = _mapper.Map<List<PerformanceSchedulePLDto>>(performance.Schedules)
-            };
+            var performancePLDto = _mapper.Map<PerformancePLDto>(performance);
             return Ok(performancePLDto);
         }
 
         [HttpGet("{performanceId}/schedules/{scheduleId}/seats")]
         public async Task<IActionResult> GetAvailableSeats(int performanceId, int scheduleId, [FromQuery] string location)
         {
-            if (!string.IsNullOrEmpty(location) && location != "Зал" && location != "Балкон")
+            if (!string.IsNullOrEmpty(location) && location != "Hall" && location != "Balcony")
             {
-                return BadRequest(new { Message = "Неприпустима локація. Має бути 'Зал' або 'Балкон'." });
+                return BadRequest(new { Message = "Неприпустима локація. Має бути 'Hall' або 'Balcony'." });
             }
 
             var allPerformances = await _theaterService.GetAllPerformancesAsync();
@@ -88,7 +74,7 @@ namespace TicketSystem.PL.Controllers
                         return NotFound(new { Message = $"Розклад з ID {scheduleId} для вистави з ID {performanceId} не знайдено." });
                     }
                 }
-                
+
                 return Ok(new { Message = "Доступні місця за вказаними критеріями не знайдено.", Seats = seats });
             }
 
@@ -96,5 +82,3 @@ namespace TicketSystem.PL.Controllers
         }
     }
 }
-
-   

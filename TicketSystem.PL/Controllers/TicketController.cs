@@ -23,15 +23,15 @@ namespace TicketSystem.PL.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTicketsByStatus([FromQuery] string status)
         {
-            if (string.IsNullOrWhiteSpace(status) || !new[] { "Проданий", "Повернутий" }.Contains(status))
+            if (string.IsNullOrWhiteSpace(status) || !new[] { "Sold", "Returned" }.Contains(status))
             {
-                return BadRequest(new { Message = "Неприпустимий статус. Використовуйте 'Проданий' або 'Повернутий'." });
+                return BadRequest(new { Message = "Неприпустимий статус. Використовуйте 'Sold' або 'Returned'." });
             }
 
             var ticketStatus = status switch
             {
-                "Проданий" => TicketStatus.Sold,
-                "Повернутий" => TicketStatus.Returned,
+                "Sold" => TicketStatus.Sold,
+                "Returned" => TicketStatus.Returned,
                 _ => throw new ArgumentException($"Некоректний статус: {status}")
             };
 
@@ -94,8 +94,8 @@ namespace TicketSystem.PL.Controllers
 
             ITicketPricingStrategy pricingStrategy = request.Location switch
             {
-                "Зал" => new HallPricingStrategy(),
-                "Балкон" => new BalconyPricingStrategy(),
+                "Hall" => new HallPricingStrategy(),
+                "Balcony" => new BalconyPricingStrategy(),
                 _ => throw new ArgumentException("Некоректна локація")
             };
 
