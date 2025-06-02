@@ -193,6 +193,18 @@ namespace TicketSystem.BLL.Services
             return _mapper.Map<List<TicketDto>>(tickets);
         }
 
+        public async Task<SeatDto?> GetSeatByIdAsync(int performanceId, int scheduleId, int seatId)
+        {
+            var seat = await _unitOfWork.Seats.FirstOrDefaultAsync(
+                s => s.Id == seatId &&
+                     s.PerformanceScheduleId == scheduleId &&
+                     s.PerformanceSchedule.PerformanceId == performanceId,
+                query => query.Include(s => s.Ticket),
+                query => query.Include(s => s.PerformanceSchedule));
+
+            return seat != null ? _mapper.Map<SeatDto>(seat) : null;
+        }
+
     }
 
     public static class PhoneNumberValidator

@@ -40,8 +40,11 @@ namespace TicketSystem.PL.Controllers
 
             foreach (var ticket in tickets)
             {
-                var seat = (await _theaterService.GetAvailableSeatsAsync(ticket.PerformanceId, ticket.PerformanceScheduleId, null))
-                    .FirstOrDefault(s => s.Id == ticket.SeatId);
+                var seat = await _theaterService.GetSeatByIdAsync(ticket.PerformanceId, ticket.PerformanceScheduleId, ticket.SeatId);
+                if (seat == null)
+                {
+                    return NotFound(new { Message = $"Місце з ID {ticket.SeatId} не знайдено для квитка {ticket.Id}." });
+                }
 
                 ticketPLDtos.Add(new TicketPLDto
                 {
@@ -49,7 +52,7 @@ namespace TicketSystem.PL.Controllers
                     PerformanceId = ticket.PerformanceId,
                     PerformanceScheduleId = ticket.PerformanceScheduleId,
                     SeatId = ticket.SeatId,
-                    SeatLocation = seat?.Location ?? "Unknown",
+                    SeatLocation = seat.Location, // Використовуємо seat.Location
                     Price = ticket.Price,
                     PurchaseDate = ticket.PurchaseDate,
                     PhoneNumber = ticket.PhoneNumber,
@@ -68,8 +71,11 @@ namespace TicketSystem.PL.Controllers
             if (ticket == null)
                 return NotFound();
 
-            var seat = (await _theaterService.GetAvailableSeatsAsync(ticket.PerformanceId, ticket.PerformanceScheduleId, null))
-                .FirstOrDefault(s => s.Id == ticket.SeatId);
+            var seat = await _theaterService.GetSeatByIdAsync(ticket.PerformanceId, ticket.PerformanceScheduleId, ticket.SeatId);
+            if (seat == null)
+            {
+                return NotFound(new { Message = $"Місце з ID {ticket.SeatId} не знайдено для квитка {ticket.Id}." });
+            }
 
             var ticketPLDto = new TicketPLDto
             {
@@ -77,7 +83,7 @@ namespace TicketSystem.PL.Controllers
                 PerformanceId = ticket.PerformanceId,
                 PerformanceScheduleId = ticket.PerformanceScheduleId,
                 SeatId = ticket.SeatId,
-                SeatLocation = seat?.Location ?? "Unknown",
+                SeatLocation = seat.Location, // Використовуємо seat.Location
                 Price = ticket.Price,
                 PurchaseDate = ticket.PurchaseDate,
                 PhoneNumber = ticket.PhoneNumber,
@@ -111,8 +117,11 @@ namespace TicketSystem.PL.Controllers
                 if (ticket == null)
                     return BadRequest("Не вдалося придбати квиток: місце недоступне або некоректні дані.");
 
-                var seat = (await _theaterService.GetAvailableSeatsAsync(ticket.PerformanceId, ticket.PerformanceScheduleId, null))
-                    .FirstOrDefault(s => s.Id == ticket.SeatId);
+                var seat = await _theaterService.GetSeatByIdAsync(ticket.PerformanceId, ticket.PerformanceScheduleId, ticket.SeatId);
+                if (seat == null)
+                {
+                    return NotFound(new { Message = $"Місце з ID {ticket.SeatId} не знайдено для квитка {ticket.Id}." });
+                }
 
                 var ticketPLDto = new TicketPLDto
                 {
@@ -120,7 +129,7 @@ namespace TicketSystem.PL.Controllers
                     PerformanceId = ticket.PerformanceId,
                     PerformanceScheduleId = ticket.PerformanceScheduleId,
                     SeatId = ticket.SeatId,
-                    SeatLocation = seat?.Location ?? "Unknown",
+                    SeatLocation = seat.Location, // Використовуємо seat.Location
                     Price = ticket.Price,
                     PurchaseDate = ticket.PurchaseDate,
                     PhoneNumber = ticket.PhoneNumber,
@@ -154,8 +163,14 @@ namespace TicketSystem.PL.Controllers
             if (!success || updatedTicket == null)
                 return BadRequest(new { Message = "Не вдалося повернути квиток: можливо, минув період повернення або квиток некоректний." });
 
-            var seat = (await _theaterService.GetAvailableSeatsAsync(updatedTicket.PerformanceId, updatedTicket.PerformanceScheduleId, null))
-                .FirstOrDefault(s => s.Id == updatedTicket.SeatId);
+            var seat = await _theaterService.GetSeatByIdAsync(updatedTicket.PerformanceId, updatedTicket.PerformanceScheduleId, updatedTicket.SeatId);
+            if (seat == null)
+            {
+                return NotFound(new { Message = $"Місце з ID {updatedTicket.SeatId} не знайдено для квитка {updatedTicket.Id}." });
+            }
+
+            var originalPrice = ticket.Price;
+            var refundAmount = originalPrice * 0.8m;
 
             var ticketPLDto = new TicketPLDto
             {
@@ -163,14 +178,14 @@ namespace TicketSystem.PL.Controllers
                 PerformanceId = updatedTicket.PerformanceId,
                 PerformanceScheduleId = updatedTicket.PerformanceScheduleId,
                 SeatId = updatedTicket.SeatId,
-                SeatLocation = seat?.Location ?? "Unknown",
-                Price = updatedTicket.Price,
+                SeatLocation = seat.Location, // Використовуємо seat.Location
+                Price = originalPrice,
                 PurchaseDate = updatedTicket.PurchaseDate,
                 PhoneNumber = updatedTicket.PhoneNumber,
                 Status = updatedTicket.Status.ToString()
             };
 
-            return Ok(new { Message = "Квиток успішно повернено", RefundAmount = ticketPLDto.Price, Ticket = ticketPLDto });
+            return Ok(new { Message = "Квиток успішно повернено", RefundAmount = refundAmount, Ticket = ticketPLDto });
         }
 
         [HttpDelete("{id}")]
@@ -187,8 +202,14 @@ namespace TicketSystem.PL.Controllers
             if (!success || updatedTicket == null)
                 return BadRequest(new { Message = $"Не вдалося повернути квиток з ID {id}: можливо, минув період повернення або квиток некоректний." });
 
-            var seat = (await _theaterService.GetAvailableSeatsAsync(updatedTicket.PerformanceId, updatedTicket.PerformanceScheduleId, null))
-                .FirstOrDefault(s => s.Id == updatedTicket.SeatId);
+            var seat = await _theaterService.GetSeatByIdAsync(updatedTicket.PerformanceId, updatedTicket.PerformanceScheduleId, updatedTicket.SeatId);
+            if (seat == null)
+            {
+                return NotFound(new { Message = $"Місце з ID {updatedTicket.SeatId} не знайдено для квитка {updatedTicket.Id}." });
+            }
+
+            var originalPrice = ticket.Price;
+            var refundAmount = originalPrice * 0.8m;
 
             var ticketPLDto = new TicketPLDto
             {
@@ -196,14 +217,14 @@ namespace TicketSystem.PL.Controllers
                 PerformanceId = updatedTicket.PerformanceId,
                 PerformanceScheduleId = updatedTicket.PerformanceScheduleId,
                 SeatId = updatedTicket.SeatId,
-                SeatLocation = seat?.Location ?? "Unknown",
-                Price = updatedTicket.Price,
+                SeatLocation = seat.Location, // Використовуємо seat.Location
+                Price = originalPrice,
                 PurchaseDate = updatedTicket.PurchaseDate,
                 PhoneNumber = updatedTicket.PhoneNumber,
                 Status = updatedTicket.Status.ToString()
             };
 
-            return Ok(new { Message = "Квиток успішно повернено", RefundAmount = ticketPLDto.Price, Ticket = ticketPLDto });
+            return Ok(new { Message = "Квиток успішно повернено", RefundAmount = refundAmount, Ticket = ticketPLDto });
         }
     }
 }

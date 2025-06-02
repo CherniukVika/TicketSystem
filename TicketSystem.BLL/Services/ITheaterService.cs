@@ -14,5 +14,6 @@ namespace TicketSystem.BLL.Services
         Task<(bool Success, TicketDto? Ticket)> ReturnTicketAsync(int ticketId, string phoneNumber);
         Task<List<TicketDto>> GetTicketsByStatusAsync(TicketSystem.BLL.Dto.TicketStatus status);
         Task<TicketDto?> GetTicketByIdAsync(int id);
+        Task<SeatDto?> GetSeatByIdAsync(int performanceId, int scheduleId, int seatId);
     }
 }
