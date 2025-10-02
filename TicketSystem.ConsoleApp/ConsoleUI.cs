@@ -43,7 +43,7 @@ namespace TicketSystem.ConsoleApp
                 }
                 else
                 {
-                    Console.Write("Некоректний вибір! Спробуйте ще раз.");
+                    Console.Write("Неправильний вибір! Спробуйте ще раз.");
                     Console.ReadKey();
                 }
             }
