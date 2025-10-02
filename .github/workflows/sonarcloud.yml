@@ -28,10 +28,8 @@ jobs:
           dotnet tool install --global dotnet-sonarscanner
           echo "$env:USERPROFILE\.dotnet\tools" >> $env:GITHUB_PATH
           dotnet sonarscanner begin `
-          /k:"CherniukVika_TicketSystem" `
-          /o:"cherniukvika" `
-          /d:sonar.projectKey="<Project Key>" `
-          /d:sonar.organization="<Organization Key>" `
+          /d:sonar.projectKey="<CherniukVika_TicketSystem>" `
+          /d:sonar.organization="<cherniukvika>" `
           /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
           /d:sonar.cs.opencover.reportsPaths="**/coverage.xml" `
           /d:sonar.cpd.cs.minimumTokens=40 `
